@@ -1,5 +1,3 @@
-import re
-
 from DataModel import namespace_node,class_node,struct_node,variable_node
 
 def extract_scope(content,startIndex):
@@ -49,8 +47,6 @@ def proccess_scope(parent_node,content):
         # Iterate over each character in the file
         while i < len(content):
 
-
-
             #clear comments after blank lines, ost likely not linked to next scope
             if(content[i:i+2]=="\n"):
                 linesSinceLastComment=linesSinceLastComment+1
@@ -86,7 +82,7 @@ def proccess_scope(parent_node,content):
 
             if(is_modifier_bool):
                 collected_modifiers.append(modifier_rtn)
-                print(f"skipping {modifier_skip-i} characters for {modifier_rtn}")
+                #print(f"skipping {modifier_skip-i} characters for {modifier_rtn}")
                 i=modifier_skip
                 last_modifier_index=modifier_skip
                 continue
@@ -161,7 +157,7 @@ def proccess_scope(parent_node,content):
                 continue     
 
             if content[i] == "(":
-                functionParams  
+                pass #functionParams  
 
             if content[i] == ";":  
                 

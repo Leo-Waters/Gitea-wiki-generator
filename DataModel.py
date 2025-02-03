@@ -74,7 +74,8 @@ class code_node:
             child.debugChildren(depth+1)
 
     def debug_info(self):
-        return f'{self.name} ({self.tag}) "{self.desc.replace("\n", " *new-line* ")}"'
+        newline="\n"
+        return f'{self.name} ({self.tag}) "{self.desc.replace(newline, " *new-line* ")}" '
     
     #if the node has a page, this function will return its markup
     def get_page_markup(self):
@@ -126,7 +127,8 @@ class access_modifier_node(code_node):
         for mod in self.access_modifiers:
             modifiers=f"{modifiers} {mod}"
 
-        return f'{modifiers} {self.name} ({self.tag}) "{self.desc.replace("\n", " *new-line* ")}"'
+        newline="\n"
+        return f'{modifiers} {self.name} ({self.tag}) "{self.desc.replace(newline, " *new-line* ")}"'
 
 class variable_node(access_modifier_node):
     def __init__(self,parent,name,desc,type,access_modifiers = ["private"]):
@@ -137,8 +139,8 @@ class variable_node(access_modifier_node):
         modifiers=""
         for mod in self.access_modifiers:
             modifiers=f"{modifiers} {mod}"
-
-        return f'{modifiers} {self.type} {self.name} ({self.tag}) "{self.desc.replace("\n", " *new-line* ")}"'
+        newline="\n"
+        return f'{modifiers} {self.type} {self.name} ({self.tag}) "{self.desc.replace(newline, " *new-line* ")}"'
 
 class struct_node(access_modifier_node):
     def __init__(self,parent,name,desc,access_modifiers = ["private"],tag="struct"):
