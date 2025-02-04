@@ -79,7 +79,7 @@ class code_node:
     
     #if the node has a page, this function will return its markup
     def get_page_markup(self):
-        pass
+        return ""
     
     #returns what the parent page should see 
     def get_parent_page_markup(self):
@@ -90,19 +90,24 @@ class code_node:
         if(self.generates_page):
             return f"[{self.name}](baseUrl)"
         else:
-            return f"self.name"
+            return self.name
+        
+    def get_file_name(self):
+        return self.get_tree("-")+".md"
         
     
     def get_tree(self,seperator=" -> "):
         node=self
         node_names=[]
         while node != None:
-            node_names.append(node.get_link())
+            node_names.append(node.name)
             node=node.parent
         
         node_names.reverse()
 
-        tree=""
+        tree=node_names.pop(0)
+        
+        
         for name in node_names:
             tree=f"{tree}{seperator}{name}"
         
@@ -113,8 +118,12 @@ class namespace_node(code_node):
         super().__init__(parent=parent,name=name,desc=desc,generates_page=True,tag="namespace")
     
     def get_page_markup(self):
-        markup= f"##namespace -> {self.name}\n\n{self.get_tree()}\n\n##\n{self.desc}\n\n##Varibles##\n\n"
+        markup= f"##namespace -> {self.name}\n\n{self.get_tree()}\n\n##\n{self.desc}\n\n##namespaces##\n\n"
         return markup
+    
+    #returns what the parent page should see 
+    def get_parent_page_markup(self):
+        return self.link
 
 #proivdes the extra property access modifier for public private ect
 class access_modifier_node(code_node):

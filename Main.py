@@ -4,7 +4,7 @@ from ScriptParser import *
 from gitCommands import *
 from fileLoading import *
 from DataModel import namespace_node
-
+from pageGeneration import generate_pages
 if __name__ == "__main__":
 
     #ensure enviroment variables are set
@@ -14,6 +14,9 @@ if __name__ == "__main__":
     if "WIKI_REPO_ADDRESS" in os.environ:
         raise Exception("enviroment variable not set: WIKI_REPO_ADDRESS")
     
+    #load ignore list for file searching
+    load_ignore_list()
+
     #get repo addresses from enviroment variables or .env file
     repo= os.getenv('REPO_ADDRESS')
     wikiRepo= os.getenv('WIKI_REPO_ADDRESS')
@@ -46,3 +49,9 @@ if __name__ == "__main__":
                 pass
         
     root_node.debugChildren()
+
+    #generate the wiki pages
+    generate_pages(root_node,"wkdir/"+get_repo_name(wikiRepo))
+
+
+    #push wiki update to git ##### TODO  ####

@@ -1,5 +1,5 @@
 from DataModel import namespace_node,class_node,struct_node,variable_node
-
+from pageGeneration import generate_pages
 def extract_scope(content,startIndex):
 
     open_count=0
@@ -232,7 +232,7 @@ namespace leo.gui {
 }
 """
 
-root_namespace = namespace_node(name="",desc="the root name space")
+root_namespace = namespace_node(name="root",desc="the root name space")
 
 # Extract namespaces
 proccess_scope(root_namespace,cs_content)
@@ -240,3 +240,5 @@ proccess_scope(root_namespace,cs_content)
 
 # Print results
 root_namespace.debugChildren()
+
+generate_pages(root_namespace,"wkdir/test/")
