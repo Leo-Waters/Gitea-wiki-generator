@@ -93,7 +93,7 @@ class code_node:
             return self.name
         
     def get_file_name(self):
-        return self.get_tree("-")+".md"
+        return self.get_tree("-").strip()+".md"
         
     
     def get_tree(self,seperator=" -> "):
