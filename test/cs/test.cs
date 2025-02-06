@@ -14,6 +14,13 @@ namespace test
 
     namespace sub
     {
+        public struct weapons{
+            public weapons(sword _primary,sword _secondary){
+                primary=_primary;
+                secondary=_secondary;
+            }
+            public sword primary, secondary;
+        }
         public class item
         {
             public virtual void Use()

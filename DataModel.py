@@ -154,9 +154,11 @@ class variable_node(access_modifier_node):
 class struct_node(access_modifier_node):
     def __init__(self,parent,name,desc,access_modifiers = ["private"],tag="struct"):
         super().__init__(parent=parent,name=name,desc=desc,access_modifiers = access_modifiers,generates_page=True,tag=tag)
+        
 
 class class_node(struct_node):
-    def __init__(self,parent,name,desc,access_modifiers = ["private"]):
+    def __init__(self,parent,name,desc,access_modifiers = ["private"],inheritance = []):
         super().__init__(parent=parent,name=name,desc=desc,access_modifiers=access_modifiers,tag="class")
+        self.inheritance=inheritance
 
 

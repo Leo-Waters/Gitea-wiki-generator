@@ -128,9 +128,26 @@ def proccess_scope(parent_node,content):
                 
                 #get the index where the class scope starts
                 cutoffIndex=content.find('{',i+5)
+         
+                inheritance=[]
 
-                #get the full namespace name substring
-                class_name=content[i+5:cutoffIndex].strip()
+                inheritanceIndex=content[i+5:cutoffIndex].find(':')
+
+                class_name=""
+                if(inheritanceIndex!=-1):
+                    inheritanceIndex=inheritanceIndex+i+5
+                    class_name=content[i+5:inheritanceIndex].strip()
+
+                    if(content[inheritanceIndex:cutoffIndex].find(',')):
+                        #get all comma seperated inherited classes/interfaces and trim white space
+                        inheritance = [item.strip() for item in content[inheritanceIndex:cutoffIndex].split(',')]
+                    
+                    else:
+                        inheritance.append(content[inheritanceIndex:cutoffIndex].strip())
+                else:
+                    #get the name substring
+                    class_name=content[i+5:cutoffIndex].strip()
+
 
                 description=commentBuffer
                 commentBuffer=""
@@ -138,7 +155,7 @@ def proccess_scope(parent_node,content):
                 #extract the scope and get end index
                 class_content,end_of_scope=extract_scope(content,cutoffIndex)
 
-                class_ =class_node(parent=parent_node,name=class_name,desc=description,access_modifiers=collected_modifiers)
+                class_ =class_node(parent=parent_node,name=class_name,desc=description,access_modifiers=collected_modifiers,inheritance=inheritance)
                 collected_modifiers= []
                 proccess_scope(class_,class_content)
 
@@ -148,11 +165,13 @@ def proccess_scope(parent_node,content):
 
             if content[i:i + 6] == "struct" and (i == 0 or content[i - 1].isspace()):  
                 
-                #get the index where the class scope starts
+                #get the index where the struct scope starts
                 cutoffIndex=content.find('{',i+5)
 
+                inheritance=[]
+
                 #get the full namespace name substring
-                class_name=content[i+6:cutoffIndex].strip()
+                struct_name=content[i+6:cutoffIndex].strip()
 
                 description=commentBuffer
                 commentBuffer=""
@@ -160,7 +179,7 @@ def proccess_scope(parent_node,content):
                 #extract the scope and get end index
                 struct_content,end_of_scope=extract_scope(content,cutoffIndex)
 
-                struct_ =struct_node(parent=parent_node,name=class_name,desc=description,access_modifiers=collected_modifiers)
+                struct_ =struct_node(parent=parent_node,name=struct_name,desc=description,access_modifiers=collected_modifiers,inheritance=inheritance)
                 collected_modifiers= []
                 proccess_scope(struct_,struct_content)
 
