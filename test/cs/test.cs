@@ -14,32 +14,37 @@ namespace test
 
     namespace sub
     {
-        public struct weapons{
-            public weapons(sword _primary,sword _secondary){
-                primary=_primary;
-                secondary=_secondary;
+        public class Inventory{
+            public struct weapons{
+                public weapons(sword _primary,sword _secondary){
+                    primary=_primary;
+                    secondary=_secondary;
+                }
+                public sword primary, secondary;
             }
-            public sword primary, secondary;
-        }
-        public class item
-        {
-            public virtual void Use()
+
+            weapons weaponSlots;
+            public class item
             {
-            
+                public virtual void Use()
+                {
+                
+                }
             }
-        }
 
-        public class sword : item , IchargeAble
-        {
-            void Attack()
+            public class sword : item , IchargeAble
             {
-            
+                void Attack()
+                {
+                
+                }
+
+                bool isCharged => true;
+
+                public overide void Use => Attack();
             }
-
-            bool isCharged => true;
-
-            public overide void Use => Attack();
         }
+        
     
     }
 }

@@ -112,6 +112,26 @@ class code_node:
             tree=f"{tree}{seperator}{name}"
         
         return tree
+    
+    def get_child_nodes_with_tag(self,tag=""):
+        nodes=[]
+
+        for node in self.children:
+            if(node.tag==tag):
+                nodes.append(node)
+        
+        return nodes
+    
+    def get_group_markup(self,title,tag=""):
+        nodes=self.get_child_nodes_with_tag(tag)
+        markup=""
+        if len(nodes)>0:
+            markup=markup+title
+            for node in nodes:
+                markup=markup+node.get_link()+"\n"
+            
+            markup=markup+"\n\n"
+        return markup
 
 class namespace_node(code_node):
     def __init__(self,parent=None,name="blank namespace node",desc=""):
@@ -160,5 +180,22 @@ class class_node(struct_node):
     def __init__(self,parent,name,desc,access_modifiers = ["private"],inheritance = []):
         super().__init__(parent=parent,name=name,desc=desc,access_modifiers=access_modifiers,tag="class")
         self.inheritance=inheritance
+
+    def get_page_markup(self):
+
+        markup=f"##class -> {self.name}##\n\n"
+
+        markup= markup + self.get_group_markup("#sub classes#\n","class")
+        markup= markup + self.get_group_markup("#sub structs#\n","struct")
+        markup= markup + self.get_group_markup("#sub enum#\n","enum")
+
+        markup= markup + self.get_group_markup("#Variables#\n","var")
+        markup= markup + self.get_group_markup("#Functions#\n","func")
+       
+        
+        return markup
+    
+    def get_parent_page_markup(self):
+        return super().get_parent_page_markup()
 
 

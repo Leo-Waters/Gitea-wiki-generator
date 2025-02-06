@@ -50,6 +50,8 @@ def proccess_scope(parent_node,content):
         collected_name=""
         linesSinceLastComment=0
 
+        params=""
+
         lastI=-1
         # Iterate over each character in the file
         while i < len(content):
@@ -64,6 +66,7 @@ def proccess_scope(parent_node,content):
                 linesSinceLastComment=linesSinceLastComment+1
                 if(linesSinceLastComment==3):
                     commentBuffer=""
+                    last_modifier_index=i+2
             
             # detected single line comment
             if(content[i:i+2]=="//"):
@@ -77,6 +80,7 @@ def proccess_scope(parent_node,content):
                 commentBuffer=commentBuffer+content[i:end_of_comment]
                 i=end_of_comment
                 linesSinceLastComment=0
+                last_modifier_index=end_of_comment
                 continue
 
             #found multi line comment
@@ -87,6 +91,7 @@ def proccess_scope(parent_node,content):
                 commentBuffer=commentBuffer+content[i:end_of_comment-1]
                 i=end_of_comment
                 linesSinceLastComment=0
+                last_modifier_index=end_of_comment
                 continue
 
             #check and gather access modifier
@@ -122,6 +127,7 @@ def proccess_scope(parent_node,content):
 
                 #move the itteration forward until its past the namespaces scope
                 i=end_of_scope
+                last_modifier_index=end_of_scope
                 continue      
 
             if content[i:i + 5] == "class" and (i == 0 or content[i - 1].isspace()):  
@@ -161,14 +167,13 @@ def proccess_scope(parent_node,content):
 
                 #move the itteration forward until its past the namespaces scope
                 i=end_of_scope
+                last_modifier_index=end_of_scope
                 continue      
 
             if content[i:i + 6] == "struct" and (i == 0 or content[i - 1].isspace()):  
                 
                 #get the index where the struct scope starts
                 cutoffIndex=content.find('{',i+5)
-
-                inheritance=[]
 
                 #get the full namespace name substring
                 struct_name=content[i+6:cutoffIndex].strip()
@@ -179,16 +184,22 @@ def proccess_scope(parent_node,content):
                 #extract the scope and get end index
                 struct_content,end_of_scope=extract_scope(content,cutoffIndex)
 
-                struct_ =struct_node(parent=parent_node,name=struct_name,desc=description,access_modifiers=collected_modifiers,inheritance=inheritance)
+                struct_ =struct_node(parent=parent_node,name=struct_name,desc=description,access_modifiers=collected_modifiers)
                 collected_modifiers= []
                 proccess_scope(struct_,struct_content)
 
                 #move the itteration forward until its past the namespaces scope
                 i=end_of_scope
+                last_modifier_index=end_of_scope
                 continue     
 
             if content[i] == "(":
-                i=i+1
+                cutoffIndex=content.find(')',i)
+
+                params=content[i+1,cutoffIndex]
+
+                i=cutoffIndex
+                last_modifier_index=cutoffIndex
                 continue    #functionParams  
 
             if content[i] == ";":  
